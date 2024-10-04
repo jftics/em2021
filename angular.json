@@ -4,6 +4,9 @@
   "newProjectRoot": "projects",
   "projects": {
     "appVisor2021": {
+      "i18n":{
+        "sourceLocale":"es-BO"
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {

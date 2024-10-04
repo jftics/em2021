@@ -4,14 +4,14 @@
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="drawer.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
-    <span>App Material</span>
+    <span>Menú</span>
     <span class="example-spacer"></span>
-    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <!-- <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon>favorite</mat-icon>
     </button>
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
       <mat-icon>share</mat-icon>
-    </button>
+    </button> -->
 </mat-toolbar>
   
 
@@ -22,34 +22,29 @@
         <mat-accordion>
             <mat-expansion-panel hideToggle>
               <mat-expansion-panel-header>
-                <mat-panel-title> Formularios Básicos </mat-panel-title>
+                <mat-panel-title> Dashboard</mat-panel-title>
               </mat-expansion-panel-header>
               
               <mat-list>
-                <mat-list-item routerLink="form1" class="app-material-link">
+                <mat-list-item routerLink="dashboard" class="app-material-link">
                     <mat-icon matListItemIcon>folder</mat-icon>
-                    <div matListItemTitle>Formulario 1</div>
+                    <div matListItemTitle>General</div>
                 </mat-list-item>
-                <mat-list-item  routerLink="form2">
+                <mat-list-item  routerLink="desagregado"  class="app-material-link">
                     <mat-icon matListItemIcon>folder</mat-icon>
-                    <div matListItemTitle>Formulario 2</div>
+                    <div matListItemTitle>Desagredado</div>
                 </mat-list-item>
                 
               </mat-list>
               
 
             </mat-expansion-panel>
-            <mat-expansion-panel hideToggle>
-                <mat-expansion-panel-header>
-                  <mat-panel-title> Formularios Avanzados </mat-panel-title>
-                </mat-expansion-panel-header>
-                <p>This is the primary content of the panel.</p>
-              </mat-expansion-panel>
+            
           </mat-accordion>
           
 
     </mat-drawer>
-    <mat-drawer-content>
+    <mat-drawer-content style="padding: 5px;">
 
         <router-outlet></router-outlet>
 
