@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { DecimalPipe, DatePipe, CurrencyPipe } from '@angular/common';
-import { MatGridListModule } from '@angular/material/grid-list';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -11,43 +13,35 @@ import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import am5themes_Dark from '@amcharts/amcharts5/themes/Dark';
 import * as am5radar from '@amcharts/amcharts5/radar'
 import am5locales_es_ES from "@amcharts/amcharts5/locales/es_ES";
+import * as am5p from "@amcharts/amcharts5/percent";
+
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-macro',
   standalone: true,
-  imports: [MatCardModule, DecimalPipe, MatGridListModule ],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  imports: [MatCardModule, MatInputModule, MatSelectModule, MatFormFieldModule, FormsModule],
+  templateUrl: './macro.component.html',
+  styleUrl: './macro.component.scss'
 })
-export class DashboardComponent {
+export class MacroComponent {
 
-  dataOrigen: any = {};
-  dataGeneral = {};
-  dataTotal: number = 0;
-  dataTotalMAS: number = 0;
-  dataTotalPBCSP: number = 0;
-  dataTotalesPartido = {};
-  dataTotalesMacro = {};
 
+  dataOrigen: any = {}
+  dataGeneral: any = {}
+  macroSelected: any
+
+
+  listaChart: any = {}
 
   ngOnInit(): void {
     this.dataOrigen = this.getData()
     this.dataGeneral = this.groupByProperties(this.dataOrigen);
-    this.dataTotalesPartido = this.getDataTotales(this.dataGeneral)
-    this.dataTotal = this.getDataTotal(this.dataTotalesPartido)
-    this.dataTotalMAS = this.getDataTotalPartido(this.dataTotalesPartido, 'MAS-IPSP')
-    this.dataTotalPBCSP = this.getDataTotalPartido(this.dataTotalesPartido, 'PBCSP')
-
-    this.dataTotalesMacro = this.getDataTotalesMacroPrimeros(this.dataGeneral)
-    console.log(this.dataTotalesMacro)
-    // setTimeout(() => {
-    //   this.Grafico1()
-    // }, 1000)
+    console.log(this.dataGeneral)
   }
 
   ngAfterViewInit() {
-    this.graficoTotales(this.dataTotalesPartido)
-    this.graficoTotalesMacro(this.dataTotalesMacro);
+
+
   }
 
 
@@ -3164,7 +3158,21 @@ export class DashboardComponent {
 
     return macros;
   };
-  getDataTotales(dataOrigen: any) {
+
+  seleccionarMacro() {
+    console.log(this.macroSelected)
+    const dataTotalesMacro = this.getDataPieTotalesMacro(this.macroSelected, this.dataGeneral)
+    this.graficoTotales('chartPieTotalesMacro', dataTotalesMacro)
+
+    const dataTotalesDistrito = this.getDataDistritos(this.macroSelected, this.dataGeneral)
+    this.graficoDistritos('chartBarDistritos', dataTotalesDistrito)
+  }
+
+  getDataPieTotalesMacro(macrodistrito: string, dataOrigen: any) {
+    // {
+    //   category: "Lithuania",
+    //   value: 501.9
+    // }
 
     let p_asp = 0;
     let p_mts = 0;
@@ -3180,130 +3188,118 @@ export class DashboardComponent {
 
     dataOrigen.forEach((macro: any) => {
       //console.log(macro);
-      macro.distritos.forEach((distrito: any) => {
-        //console.log(distrito);
-        distrito.zonas.forEach((zona: any) => {
-          //console.log(zona);
-          zona.recintos.forEach((recinto: any) => {
-            //console.log(recinto);
-            recinto.datos.forEach((dato: any) => {
-              //console.log(dato);
-              switch (dato.partido) {
-                case "ASP":
-                  p_asp = p_asp + dato.votos
-                  break;
-                case "MTS":
-                  p_mts = p_mts + dato.votos
-                  break;
-                case "MAS-IPSP":
-                  p_mas_ipsp = p_mas_ipsp + dato.votos
-                  break;
-                case "MPS":
-                  p_mps = p_mps + dato.votos
-                  break;
-                case "V":
-                  p_v = p_v + dato.votos
-                  break;
-                case "UCS":
-                  p_ucs = p_ucs + dato.votos
-                  break;
-                case "J.A. LLALLA.L.P.":
-                  p_jallalla = p_jallalla + dato.votos
-                  break;
-                case "UNIDOS":
-                  p_unidos = p_unidos + dato.votos
-                  break;
-                case "PBCSP":
-                  p_pbcsp = p_pbcsp + dato.votos
-                  break;
-                case "PAN-BOL":
-                  p_panbol = p_panbol + dato.votos
-                  break;
-                case "SOL.BO":
-                  p_solbo = p_solbo + dato.votos
-                  break;
-              }
+      if (macro.macro == macrodistrito) {
+        macro.distritos.forEach((distrito: any) => {
+          //console.log(distrito);
+          distrito.zonas.forEach((zona: any) => {
+            //console.log(zona);
+            zona.recintos.forEach((recinto: any) => {
+              //console.log(recinto);
+              recinto.datos.forEach((dato: any) => {
+                //console.log(dato);
+                switch (dato.partido) {
+                  case "ASP":
+                    p_asp = p_asp + dato.votos
+                    break;
+                  case "MTS":
+                    p_mts = p_mts + dato.votos
+                    break;
+                  case "MAS-IPSP":
+                    p_mas_ipsp = p_mas_ipsp + dato.votos
+                    break;
+                  case "MPS":
+                    p_mps = p_mps + dato.votos
+                    break;
+                  case "V":
+                    p_v = p_v + dato.votos
+                    break;
+                  case "UCS":
+                    p_ucs = p_ucs + dato.votos
+                    break;
+                  case "J.A. LLALLA.L.P.":
+                    p_jallalla = p_jallalla + dato.votos
+                    break;
+                  case "UNIDOS":
+                    p_unidos = p_unidos + dato.votos
+                    break;
+                  case "PBCSP":
+                    p_pbcsp = p_pbcsp + dato.votos
+                    break;
+                  case "PAN-BOL":
+                    p_panbol = p_panbol + dato.votos
+                    break;
+                  case "SOL.BO":
+                    p_solbo = p_solbo + dato.votos
+                    break;
+                }
+              })
             })
           })
         })
-      })
+      }
+
     })
 
     return [
       {
-        "network": "ASP",
+        "category": "ASP",
         "value": p_asp
       },
 
       {
-        "network": "MTS",
+        "category": "MTS",
         "value": p_mts
       },
       {
-        "network": "MAS-IPSP",
+        "category": "MAS-IPSP",
         "value": p_mas_ipsp
       },
       {
-        "network": "MPS",
+        "category": "MPS",
         "value": p_mps
       },
       {
-        "network": "V",
+        "category": "V",
         "value": p_v
       },
       {
-        "network": "UCS",
+        "category": "UCS",
         "value": p_ucs
       },
       {
-        "network": "J.A. LLALLA.L.P.",
+        "category": "J.A. LLALLA.L.P.",
         "value": p_jallalla
       },
       {
-        "network": "UNIDOS",
+        "category": "UNIDOS",
         "value": p_unidos
       },
       {
-        "network": "PBCSP",
+        "category": "PBCSP",
         "value": p_pbcsp
       },
       {
-        "network": "PAN-BOL",
+        "category": "PAN-BOL",
         "value": p_panbol
       },
       {
-        "network": "SOL.BO",
+        "category": "SOL.BO",
         "value": p_solbo
       }
 
     ]
-  }
-  getDataTotal(dataOrigen: any) {
 
-    let total = 0
-    dataOrigen.forEach((partido: any) => {
-      //console.log("-...",partido.value);
-      total = total + partido.value
-    })
-    //console.log("-...",total);
-    return total
   }
-  getDataTotalPartido(dataOrigen: any, sigla: string) {
+  getDataDistritos(macrodistrito: any, dataOrigen: any) {
+    // {"year": "2021",
+    //   "europe": 2.5,
+    //   "namerica": 2.5,
+    //   "asia": 2.1,
+    //   "lamerica": 1,
+    //   "meast": 0.8,
+    //   "africa": 0.4
+    // } 
 
-    let total = 0
-    dataOrigen.forEach((partido: any) => {
-      if (partido.network == sigla) {
-        total = partido.value
-      }
-    })
-    return total
-  }
-  getDataTotalesMacroPrimeros(dataOrigen: any){
-    // {
-    //   year: "centro",
-    //   income: pbc,
-    //   expenses: mas       
-    // }
     let p_asp = 0;
     let p_mts = 0;
     let p_mas_ipsp = 0;
@@ -3316,84 +3312,91 @@ export class DashboardComponent {
     let p_panbol = 0;
     let p_solbo = 0;
 
-    let res:any = []
+    let res: any = []
 
     dataOrigen.forEach((macro: any) => {
       //console.log(macro);
-      macro.distritos.forEach((distrito: any) => {
-        //console.log(distrito);
-        distrito.zonas.forEach((zona: any) => {
-          //console.log(zona);
-          zona.recintos.forEach((recinto: any) => {
-            //console.log(recinto);
-            recinto.datos.forEach((dato: any) => {
-              //console.log(dato);
-              switch (dato.partido) {
-                case "ASP":
-                  p_asp = p_asp + dato.votos
-                  break;
-                case "MTS":
-                  p_mts = p_mts + dato.votos
-                  break;
-                case "MAS-IPSP":
-                  p_mas_ipsp = p_mas_ipsp + dato.votos
-                  break;
-                case "MPS":
-                  p_mps = p_mps + dato.votos
-                  break;
-                case "V":
-                  p_v = p_v + dato.votos
-                  break;
-                case "UCS":
-                  p_ucs = p_ucs + dato.votos
-                  break;
-                case "J.A. LLALLA.L.P.":
-                  p_jallalla = p_jallalla + dato.votos
-                  break;
-                case "UNIDOS":
-                  p_unidos = p_unidos + dato.votos
-                  break;
-                case "PBCSP":
-                  p_pbcsp = p_pbcsp + dato.votos
-                  break;
-                case "PAN-BOL":
-                  p_panbol = p_panbol + dato.votos
-                  break;
-                case "SOL.BO":
-                  p_solbo = p_solbo + dato.votos
-                  break;
-              }
+      if (macro.macro == macrodistrito) {
+        macro.distritos.forEach((distrito: any) => {
+          console.log("...", distrito);
+          distrito.zonas.forEach((zona: any) => {
+            //console.log(zona);
+            zona.recintos.forEach((recinto: any) => {
+              //console.log(recinto);
+              recinto.datos.forEach((dato: any) => {
+                //console.log(dato);
+                switch (dato.partido) {
+                  case "ASP":
+                    p_asp = p_asp + dato.votos
+                    break;
+                  case "MTS":
+                    p_mts = p_mts + dato.votos
+                    break;
+                  case "MAS-IPSP":
+                    p_mas_ipsp = p_mas_ipsp + dato.votos
+                    break;
+                  case "MPS":
+                    p_mps = p_mps + dato.votos
+                    break;
+                  case "V":
+                    p_v = p_v + dato.votos
+                    break;
+                  case "UCS":
+                    p_ucs = p_ucs + dato.votos
+                    break;
+                  case "J.A. LLALLA.L.P.":
+                    p_jallalla = p_jallalla + dato.votos
+                    break;
+                  case "UNIDOS":
+                    p_unidos = p_unidos + dato.votos
+                    break;
+                  case "PBCSP":
+                    p_pbcsp = p_pbcsp + dato.votos
+                    break;
+                  case "PAN-BOL":
+                    p_panbol = p_panbol + dato.votos
+                    break;
+                  case "SOL.BO":
+                    p_solbo = p_solbo + dato.votos
+                    break;
+                }
+              })
             })
           })
-        })
-      })
 
-      res.push( {
-        year: macro.macro,
-        income: p_pbcsp,
-        expenses: p_mas_ipsp
-      })
-      p_asp = 0;
-      p_mts = 0;
-      p_mas_ipsp = 0;
-      p_mps = 0;
-      p_v = 0;
-      p_ucs = 0;
-      p_jallalla = 0;
-      p_unidos = 0;
-      p_pbcsp = 0;
-      p_panbol = 0;
-      p_solbo = 0;
+          res.push(
+            {
+              "year": distrito.distrito,
+              "PBCSP": p_pbcsp,
+              "MAS-IPSP": p_mas_ipsp,
+              "J.A. LLALLA.L.P.": p_jallalla,
+              "SOL.BO": p_solbo,
+              "MPS": p_mps,
+              "UNIDOS": p_unidos,
+              "UCS": p_ucs,
+              "ASP": p_asp,
+              "MTS": p_mts,
+              "V": p_v,
+              "PAN-BOL": p_panbol
+            })
+        })
+      }
+
     })
 
     return res
   }
 
-  graficoTotales(data: any) {
+  graficoTotales(idChart: string, data: any) {
+
+    if (this.listaChart[idChart]) {   //check if exist chart dispose that
+      this.listaChart[idChart].dispose()
+    }
+
     /* Chart code */
     // Create root element
     // https://www.amcharts.com/docs/v5/getting-started/#Root_element
-    let root = am5.Root.new("chartdivTotales");
+    let root = am5.Root.new("chartdivPieMacro");
     root.locale = am5locales_es_ES;
     root._logo!.dispose();
     // Set themes
@@ -3404,382 +3407,141 @@ export class DashboardComponent {
     ]);
 
 
-    // Create chart
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/
-    let chart = root.container.children.push(am5xy.XYChart.new(root, {
-      panX: false,
-      panY: false,
-      wheelX: "none",
-      wheelY: "none",
-      paddingLeft: 0
-    }));
-
-    // We don't want zoom-out button to appear while animating, so we hide it
-    chart.zoomOutButton.set("forceHidden", true);
-
-
-    // Create axes
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
-    let yRenderer = am5xy.AxisRendererY.new(root, {
-      minGridDistance: 30,
-      minorGridEnabled: true
-    });
-
-    yRenderer.grid.template.set("location", 1);
-
-    let yAxis = chart.yAxes.push(am5xy.CategoryAxis.new(root, {
-      maxDeviation: 0,
-      categoryField: "network",
-      renderer: yRenderer,
-      tooltip: am5.Tooltip.new(root, { themeTags: ["axis"] })
-    }));
-
-    let xAxis = chart.xAxes.push(am5xy.ValueAxis.new(root, {
-      maxDeviation: 0,
-      min: 0,
-      numberFormatter: am5.NumberFormatter.new(root, {
-        "numberFormat": "#,###a"
-      }),
-      extraMax: 0.1,
-      renderer: am5xy.AxisRendererX.new(root, {
-        strokeOpacity: 0.1,
-        minGridDistance: 80
-
-      })
-    }));
-
-
-    // Add series
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
-    let series = chart.series.push(am5xy.ColumnSeries.new(root, {
-      name: "Series 1",
-      xAxis: xAxis,
-      yAxis: yAxis,
-      valueXField: "value",
-      categoryYField: "network",
-      tooltip: am5.Tooltip.new(root, {
-        pointerOrientation: "left",
-        labelText: "[bold]Votos: {valueX}[/]"
-      })
-    }));
-
-    series.bullets.push(function () {
-      return am5.Bullet.new(root, {
-        locationX: 1,
-        locationY: 0.5,
-        sprite: am5.Label.new(root, {
-          centerY: am5.p50,
-          text: "Votos: {valueX}",
-          populateText: true,
-          //fill: am5.color("#014d7a"),
-          fontSize: 13,
-          fontWeight: "500",
-          fill: am5.color("#ffffff"),
-        })
-      });
-    });
-
-
-    // Rounded corners for columns
-    series.columns.template.setAll({
-      cornerRadiusTR: 5,
-      cornerRadiusBR: 5,
-      strokeOpacity: 0
-    });
-
-    // Make each column to be of a different color
-    series.columns.template.adapters.add("fill", function (fill, target) {
-      return chart.get("colors")!.getIndex(series.columns.indexOf(target));
-    });
-
-    series.columns.template.adapters.add("stroke", function (stroke, target) {
-      return chart.get("colors")!.getIndex(series.columns.indexOf(target));
-    });
-
-
-    // Set data
-    //let data = this.GraficoTotalesData(this.dataParse)
-    let data___ = [
-      {
-        "network": "ASP",
-        "value": 2406
-      },
-
-      {
-        "network": "MTS",
-        "value": 2163
-      },
-      {
-        "network": "MAS-IPSP",
-        "value": 194161
-      },
-      {
-        "network": "MPS",
-        "value": 8667
-      },
-      {
-        "network": "V",
-        "value": 1885
-      },
-      {
-        "network": "UCS",
-        "value": 3168
-      },
-      {
-        "network": "J.A. LLALLA.L.P.",
-        "value": 28987
-      },
-      {
-        "network": "UNIDOS",
-        "value": 3613
-      },
-      {
-        "network": "PBCSP",
-        "value": 254891
-      },
-      {
-        "network": "PAN-BOL",
-        "value": 989
-      },
-      {
-        "network": " SOL.BO",
-        "value": 13440
-      }
-
-    ]
-
-    yAxis.data.setAll(data);
-    series.data.setAll(data);
-    sortCategoryAxis();
-
-    // Get series item by category
-    function getSeriesItem(category: any) {
-      for (var i = 0; i < series.dataItems.length; i++) {
-        let dataItem = series.dataItems[i];
-        if (dataItem.get("categoryY") == category) {
-          return dataItem;
-        }
-      }
-      return null
-    }
-
-    chart.set("cursor", am5xy.XYCursor.new(root, {
-      behavior: "none",
-      xAxis: xAxis,
-      yAxis: yAxis
-    }));
-
-
-    // Axis sorting
-    function sortCategoryAxis() {
-
-      // Sort by value
-      series.dataItems.sort(function (x, y) {
-        return x.get("valueX")! - y.get("valueX")!; // descending
-        //return y.get("valueY") - x.get("valueX"); // ascending
-      })
-
-      // Go through each axis item
-      am5.array.each(yAxis.dataItems, function (dataItem) {
-        // get corresponding series item
-        let seriesDataItem = getSeriesItem(dataItem.get("category"));
-
-        if (seriesDataItem) {
-          // get index of series data item
-          let index = series.dataItems.indexOf(seriesDataItem);
-          // calculate delta position
-          let deltaPosition = (index - dataItem.get("index", 0)) / series.dataItems.length;
-          // set index to be the same as series data item index
-          dataItem.set("index", index);
-          // set deltaPosition instanlty
-          dataItem.set("deltaPosition", -deltaPosition);
-          // animate delta position to 0
-          dataItem.animate({
-            key: "deltaPosition",
-            to: 0,
-            duration: 1000,
-            easing: am5.ease.out(am5.ease.cubic)
-          })
-        }
-      });
-
-      // Sort axis items by index.
-      // This changes the order instantly, but as deltaPosition is set,
-      // they keep in the same places and then animate to true positions.
-      yAxis.dataItems.sort(function (x, y) {
-        return x.get("index")! - y.get("index")!;
-      });
-    }
-
-
-    // // update data with random values each 1.5 sec
-    // setInterval(function () {
-    //   //updateData();
-    // }, 1500)
-    // function updateData() {
-    //   am5.array.each(series.dataItems, function (dataItem) {
-    //     let value = dataItem.get("valueX")! + Math.round(Math.random() * 1000000000 - 500000000);
-    //     if (value < 0) {
-    //       value = 500000000;
-    //     }
-    //     // both valueY and workingValueY should be changed, we only animate workingValueY
-    //     dataItem.set("valueX", value);
-    //     dataItem.animate({
-    //       key: "valueXWorking",
-    //       to: value,
-    //       duration: 600,
-    //       easing: am5.ease.out(am5.ease.cubic)
-    //     });
-    //   })
-    //   sortCategoryAxis();
-    // }
-
-
-    // Make stuff animate on load
-    // https://www.amcharts.com/docs/v5/concepts/animations/
-
-    series.appear(1000);
-    chart.appear(1000, 100);
-  }
-  graficoTotalesMacro(data:any) {
-    /* Chart code */
-    // Create root element
-    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
-    let root = am5.Root.new("chartdivTotalesMacro");
-    root.locale = am5locales_es_ES;
-    root._logo!.dispose();
-    // Set themes
-    // https://www.amcharts.com/docs/v5/concepts/themes/
-    root.setThemes([
-      am5themes_Animated.new(root),
-      am5themes_Dark.new(root)
-    ]);
-
 
     // Create chart
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/
-    let chart = root.container.children.push(am5xy.XYChart.new(root, {
-      panX: false,
-      panY: false,
-      wheelX: "panX",
-      wheelY: "zoomX",
-      paddingLeft: 0,
+    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+    let chart = root.container.children.push(am5p.PieChart.new(root, {
       layout: root.verticalLayout
     }));
 
 
-    // Add legend
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
-    // let legend = chart.children.push(am5.Legend.new(root, {
-    //   centerX: am5.p50,
-    //   x: am5.p50
-    // }))
+    // Create series
+    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+    let series = chart.series.push(am5p.PieSeries.new(root, {
+      valueField: "value",
+      categoryField: "category"
+    }));
 
 
-    // Data
+    // Set data
+    // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+    series.data.setAll(data);
+
+    series.slices.template.set("tooltipText", "{category}: [bold]{valuePercentTotal.formatNumber('0.00')}%[/] (Votos: {value})");
+    // Create legend
+    // https://www.amcharts.com/docs/v5/charts/percent-charts/legend-percent-series/
+    let legend = chart.children.push(am5.Legend.new(root, {
+      centerX: am5.percent(50),
+      x: am5.percent(50),
+      marginTop: 15,
+      marginBottom: 15
+    }));
+
+    legend.data.setAll(series.dataItems);
+
+
+    // Play initial series animation
+    // https://www.amcharts.com/docs/v5/concepts/animations/#Animation_of_series
+    series.appear(1000, 100);
+
+    this.listaChart[idChart] = root
+  }
+  graficoDistritos___(idChart: string, data: any) {
+
+    if (this.listaChart[idChart]) {   //check if exist chart dispose that
+      this.listaChart[idChart].dispose()
+    }
+
+    /* Chart code */
+    // Create root element
+    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+    let root = am5.Root.new("chartdivBarDistrito");
+    root.locale = am5locales_es_ES;
+    root._logo!.dispose();
+    // Set themes
+
+
+    let myTheme = am5.Theme.new(root);
+
+    myTheme.rule("Grid", ["base"]).setAll({
+      strokeOpacity: 0.1
+    });
+
+    // https://www.amcharts.com/docs/v5/concepts/themes/
+    root.setThemes([
+      am5themes_Animated.new(root),
+      am5themes_Dark.new(root),
+      myTheme
+    ]);
+
+    // Create chart
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/
+    let chart = root.container.children.push(am5xy.XYChart.new(root, {
+      panX: false,
+      panY: false,
+      wheelX: "panY",
+      wheelY: "zoomY",
+      paddingLeft: 0,
+      layout: root.verticalLayout
+    }));
+
+    // Add scrollbar
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/scrollbars/
+    chart.set("scrollbarY", am5.Scrollbar.new(root, {
+      orientation: "vertical"
+    }));
+
+    console.log(data);
     let data2 = [{
-      year: "2017",
-      income: 23.5,
-      expenses: 18.1
+      "year": "2021",
+      "europe": 2.5,
+      "namerica": 2.5,
+      "asia": 2.1,
+      "lamerica": 1,
+      "meast": 0.8,
+      "africa": 0.4
     }, {
-      year: "2018",
-      income: 26.2,
-      expenses: 22.8
+      "year": "2022",
+      "europe": 2.6,
+      "namerica": 2.7,
+      "asia": 2.2,
+      "lamerica": 0.5,
+      "meast": 0.4,
+      "africa": 0.3
     }, {
-      year: "2019",
-      income: 30.1,
-      expenses: 23.9
-    }, {
-      year: "2020",
-      income: 29.5,
-      expenses: 25.1
-    }, {
-      year: "2021",
-      income: 24.6,
-      expenses: 25
-    }];
+      "year": "2023",
+      "europe": 2.8,
+      "namerica": 2.9,
+      "asia": 2.4,
+      "lamerica": 0.3,
+      "meast": 0.9,
+      "africa": 0.5
+    }]
 
 
     // Create axes
     // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+    let yRenderer = am5xy.AxisRendererY.new(root, {});
     let yAxis = chart.yAxes.push(am5xy.CategoryAxis.new(root, {
       categoryField: "year",
-      renderer: am5xy.AxisRendererY.new(root, {
-        inversed: true,
-        cellStartLocation: 0.1,
-        cellEndLocation: 0.9,
-        minorGridEnabled: true
-      })
+      renderer: yRenderer,
+      tooltip: am5.Tooltip.new(root, {})
     }));
+
+    yRenderer.grid.template.setAll({
+      location: 1
+    })
 
     yAxis.data.setAll(data);
 
     let xAxis = chart.xAxes.push(am5xy.ValueAxis.new(root, {
+      min: 0,
+      maxPrecision: 0,
       renderer: am5xy.AxisRendererX.new(root, {
-        strokeOpacity: 0.1,
-        minGridDistance: 50
-      }),
-      min: 0
+        minGridDistance: 40,
+        strokeOpacity: 0.1
+      })
     }));
-
-
-    // Add series
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
-    function createSeries(field:any, name:any) {
-      let series = chart.series.push(am5xy.ColumnSeries.new(root, {
-        name: name,
-        xAxis: xAxis,
-        yAxis: yAxis,
-        valueXField: field,
-        categoryYField: "year",
-        sequencedInterpolation: true,
-        tooltip: am5.Tooltip.new(root, {
-          pointerOrientation: "horizontal",
-          labelText: "[bold]{name}[/]\n{categoryY}: {valueX}"
-        })
-      }));
-
-      series.columns.template.setAll({
-        height: am5.p100,
-        strokeOpacity: 0
-      });
-
-
-      series.bullets.push(function () {
-        return am5.Bullet.new(root, {
-          locationX: 1,
-          locationY: 0.5,
-          sprite: am5.Label.new(root, {
-            centerY: am5.p50,
-            text: "{valueX}",
-            populateText: true
-          })
-        });
-      });
-
-      series.bullets.push(function () {
-        return am5.Bullet.new(root, {
-          locationX: 1,
-          locationY: 0.5,
-          sprite: am5.Label.new(root, {
-            centerX: am5.p100,
-            centerY: am5.p50,
-            text: "{name}",
-            fill: am5.color(0xffffff),
-            populateText: true
-          })
-        });
-      });
-
-      series.data.setAll(data);
-      series.appear();
-
-      return series;
-    }
-
-    createSeries("income", "PBCSP");
-    createSeries("expenses", "MAS-IPSP");
-
 
     // Add legend
     // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
@@ -3788,16 +3550,56 @@ export class DashboardComponent {
       x: am5.p50
     }));
 
-    legend.data.setAll(chart.series.values);
 
+    // Add series
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+    function makeSeries(name: any, fieldName: any) {
+      let series = chart.series.push(am5xy.ColumnSeries.new(root, {
+        name: name,
+        stacked: true,
+        xAxis: xAxis,
+        yAxis: yAxis,
+        baseAxis: yAxis,
+        valueXField: fieldName,
+        categoryYField: "year"
+      }));
 
-    // Add cursor
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
-    let cursor = chart.set("cursor", am5xy.XYCursor.new(root, {
-      behavior: "zoomY"
-    }));
-    cursor.lineY.set("forceHidden", true);
-    cursor.lineX.set("forceHidden", true);
+      series.columns.template.setAll({
+        tooltipText: "{name}, {categoryY}: {valueX}",
+        tooltipY: am5.percent(90)
+      });
+      series.data.setAll(data);
+
+      // Make stuff animate on load
+      // https://www.amcharts.com/docs/v5/concepts/animations/
+      series.appear();
+
+      series.bullets.push(function () {
+        return am5.Bullet.new(root, {
+          sprite: am5.Label.new(root, {
+            text: "{valueX}",
+            fill: root.interfaceColors.get("alternativeText"),
+            centerY: am5.p50,
+            centerX: am5.p50,
+            populateText: true
+          })
+        });
+      });
+
+      legend.data.push(series);
+    }
+
+    makeSeries("PBCSP", "PBCSP");
+    makeSeries("MAS-IPSP", "MAS-IPSP");
+    makeSeries("J.A. LLALLA.L.P.", "J.A. LLALLA.L.P.");
+    makeSeries("SOL.BO", "SOL.BO");
+    makeSeries("MPS", "MPS");
+    makeSeries("UNIDOS", "UNIDOS");
+    makeSeries("UCS", "UCS");
+    makeSeries("ASP", "ASP");
+    makeSeries("MTS", "MTS");
+    makeSeries("V", "V");
+    makeSeries("PAN-BOL", "PAN-BOL");
 
 
     // Make stuff animate on load
@@ -3805,7 +3607,175 @@ export class DashboardComponent {
     chart.appear(1000, 100);
 
 
+
+    this.listaChart[idChart] = root
   }
+  graficoDistritos(idChart: string, data: any) {
+
+    if (this.listaChart[idChart]) {   //check if exist chart dispose that
+      this.listaChart[idChart].dispose()
+    }
+
+    /* Chart code */
+    // Create root element
+    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+    let root = am5.Root.new("chartdivBarDistrito");
+    root.locale = am5locales_es_ES;
+    root._logo!.dispose();
+    // Set themes
 
 
+    // let myTheme = am5.Theme.new(root);
+
+    // myTheme.rule("Grid", ["base"]).setAll({
+    //   strokeOpacity: 0.1
+    // });
+
+    // https://www.amcharts.com/docs/v5/concepts/themes/
+    root.setThemes([
+      am5themes_Animated.new(root),
+      am5themes_Dark.new(root)
+      //myTheme
+    ]);
+
+
+    // Create chart
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/
+    let chart = root.container.children.push(am5xy.XYChart.new(root, {
+      panX: false,
+      panY: false,
+      paddingLeft: 0,
+      wheelX: "panX",
+      wheelY: "zoomX",
+      layout: root.verticalLayout
+    }));
+
+
+    // Add legend
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
+    let legend = chart.children.push(
+      am5.Legend.new(root, {
+        centerX: am5.p50,
+        x: am5.p50
+      })
+    );
+
+    let data2 = [{
+      "year": "2021",
+      "europe": 2.5,
+      "namerica": 2.5,
+      "asia": 2.1,
+      "lamerica": 1,
+      "meast": 0.8,
+      "africa": 0.4
+    }, {
+      "year": "2022",
+      "europe": 2.6,
+      "namerica": 2.7,
+      "asia": 2.2,
+      "lamerica": 0.5,
+      "meast": 0.4,
+      "africa": 0.3
+    }, {
+      "year": "2023",
+      "europe": 2.8,
+      "namerica": 2.9,
+      "asia": 2.4,
+      "lamerica": 0.3,
+      "meast": 0.9,
+      "africa": 0.5
+    }]
+
+
+    // Create axes
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+    let xRenderer = am5xy.AxisRendererX.new(root, {
+      cellStartLocation: 0.1,
+      cellEndLocation: 0.9,
+      minorGridEnabled: true
+    })
+
+    let xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+      categoryField: "year",
+      renderer: xRenderer,
+      tooltip: am5.Tooltip.new(root, {})
+    }));
+
+    xRenderer.grid.template.setAll({
+      location: 1
+    })
+
+    xAxis.data.setAll(data);
+
+    let yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+      renderer: am5xy.AxisRendererY.new(root, {
+        strokeOpacity: 0.1
+      })
+    }));
+
+
+    // Add series
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+    function makeSeries(name:any, fieldName:any) {
+      let series = chart.series.push(am5xy.ColumnSeries.new(root, {
+        name: name,
+        xAxis: xAxis,
+        yAxis: yAxis,
+        valueYField: fieldName,
+        categoryXField: "year"
+      }));
+
+      series.columns.template.setAll({
+        tooltipText: "{name}, {categoryX}. Total votos: {valueY}",
+        width: am5.percent(90),
+        tooltipY: 0,
+        strokeOpacity: 0
+      });
+
+      series.data.setAll(data);
+
+      // Make stuff animate on load
+      // https://www.amcharts.com/docs/v5/concepts/animations/
+      series.appear();
+
+      series.bullets.push(function () {
+        return am5.Bullet.new(root, {
+          locationY: 0,
+          sprite: am5.Label.new(root, {
+            text: "{valueY}",
+            fill: root.interfaceColors.get("alternativeText"),
+            centerY: 0,
+            centerX: am5.p50,
+            populateText: true
+          })
+        });
+      });
+
+      legend.data.push(series);
+    }
+
+    makeSeries("PBCSP", "PBCSP");
+    makeSeries("MAS-IPSP", "MAS-IPSP");
+    makeSeries("J.A. LLALLA.L.P.", "J.A. LLALLA.L.P.");
+    makeSeries("SOL.BO", "SOL.BO");
+    makeSeries("MPS", "MPS");
+    makeSeries("UNIDOS", "UNIDOS");
+    makeSeries("UCS", "UCS");
+    makeSeries("ASP", "ASP");
+    makeSeries("MTS", "MTS");
+    makeSeries("V", "V");
+    makeSeries("PAN-BOL", "PAN-BOL");
+
+
+
+    // Make stuff animate on load
+    // https://www.amcharts.com/docs/v5/concepts/animations/
+    chart.appear(1000, 100);
+
+    
+
+
+
+    this.listaChart[idChart] = root
+  }
 }

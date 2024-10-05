@@ -1,21 +1,65 @@
-<h2>Datos Generales</h2>
+<h4>Datos Generales</h4>
 
-<mat-card class="example-card" appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>Total Votos</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <h1>{{dataTotal | number: '1.0-0'}}</h1>
-    </mat-card-content>
-</mat-card>
+
+<div class="row" style="margin: 0;">
+  <div class="col-sm-12 col-md-4">
+    <mat-card class="app-card app-card-principal" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Total Votos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{dataTotal | number: '1.0-0'}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-sm-12 col-md-4">
+    <mat-card class="app-card" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Votos PBCSP</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{dataTotalPBCSP | number: '1.0-0'}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-sm-12 col-md-4">
+    <mat-card class="app-card" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Votos MAS-IPSP</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{dataTotalMAS | number: '1.0-0'}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
 
 <br>
 
-<mat-card class="example-card" appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>Totales por Partido</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+<div class="row" style="margin: 0;">
+  <div class="col-sm-12 col-md-6">
+    <mat-card class="app-card-grafico" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Total votos por partido</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
         <div id="chartdivTotales"></div>
-    </mat-card-content>
-</mat-card>
+      </mat-card-content>
+    </mat-card>
+    <br>
+  </div>
+  <div class="col-sm-12 col-md-6">
+    <mat-card class="app-card-grafico" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Total votos por macrodistrito</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div id="chartdivTotalesMacro"></div>
+      </mat-card-content>
+    </mat-card>
+    <br>
+  </div>
+
+</div>
+

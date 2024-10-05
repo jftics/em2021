@@ -4,8 +4,8 @@
   "newProjectRoot": "projects",
   "projects": {
     "appVisor2021": {
-      "i18n":{
-        "sourceLocale":"es-BO"
+      "i18n": {
+        "sourceLocale": "es-BO"
       },
       "projectType": "application",
       "schematics": {
@@ -36,9 +36,14 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/cyan-orange.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/@popperjs/core/dist/umd/popper.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ]
           },
           "configurations": {
             "production": {

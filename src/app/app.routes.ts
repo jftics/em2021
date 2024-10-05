@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LayoutInternoComponent } from './layouts/layout-interno/layout-interno.component';
 import { DashboardComponent } from './formularios/dashboard/dashboard.component';
 import { DesagregadoComponent } from './formularios/desagregado/desagregado.component';
-
+import { MacroComponent } from './formularios/macro/macro.component';
 export const routes: Routes = [
 
     {
@@ -15,8 +15,11 @@ export const routes: Routes = [
             },
             {
                 path:'desagregado',
-                component:DesagregadoComponent,
-                pathMatch: 'full'
+                component:DesagregadoComponent
+            },
+            {
+                path:'macro',
+                component:MacroComponent
             }
         ]
     }

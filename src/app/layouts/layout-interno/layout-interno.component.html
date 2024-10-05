@@ -16,25 +16,28 @@
   
 
 <mat-drawer-container class="app-material-container">
-    <mat-drawer #drawer mode="side" opened class="app-material-drawer">
+    <mat-drawer #drawer mode="side"  class="app-material-drawer">
 
 
         <mat-accordion>
-            <mat-expansion-panel hideToggle>
+            <mat-expansion-panel expanded>
               <mat-expansion-panel-header>
                 <mat-panel-title> Dashboard</mat-panel-title>
               </mat-expansion-panel-header>
               
-              <mat-list>
+              <mat-list >
                 <mat-list-item routerLink="dashboard" class="app-material-link">
-                    <mat-icon matListItemIcon>folder</mat-icon>
+                    <mat-icon matListItemIcon>bar_chart</mat-icon>
                     <div matListItemTitle>General</div>
                 </mat-list-item>
                 <mat-list-item  routerLink="desagregado"  class="app-material-link">
-                    <mat-icon matListItemIcon>folder</mat-icon>
+                    <mat-icon matListItemIcon>table_chart_view</mat-icon>
                     <div matListItemTitle>Desagredado</div>
                 </mat-list-item>
-                
+                <mat-list-item  routerLink="macro"  class="app-material-link">
+                  <mat-icon matListItemIcon>pie_chart</mat-icon>
+                  <div matListItemTitle>Macrodistrito</div>
+              </mat-list-item>
               </mat-list>
               
 
