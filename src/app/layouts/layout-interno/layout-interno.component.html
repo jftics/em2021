@@ -1,55 +1,56 @@
 <app-header></app-header>
 
 <mat-toolbar class="app-material-toolbar">
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="drawer.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span>Menú</span>
-    <span class="example-spacer"></span>
-    <!-- <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon"
+    (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Menú</span>
+  <span class="example-spacer"></span>
+  <!-- <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon>favorite</mat-icon>
     </button>
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
       <mat-icon>share</mat-icon>
     </button> -->
 </mat-toolbar>
-  
+
 
 <mat-drawer-container class="app-material-container">
-    <mat-drawer #drawer mode="side"  class="app-material-drawer">
+  <mat-drawer #drawer mode="side" class="app-material-drawer">
 
 
-        <mat-accordion>
-            <mat-expansion-panel expanded>
-              <mat-expansion-panel-header>
-                <mat-panel-title> Dashboard</mat-panel-title>
-              </mat-expansion-panel-header>
-              
-              <mat-list >
-                <mat-list-item routerLink="dashboard" class="app-material-link">
-                    <mat-icon matListItemIcon>bar_chart</mat-icon>
-                    <div matListItemTitle>General</div>
-                </mat-list-item>
-                <mat-list-item  routerLink="desagregado"  class="app-material-link">
-                    <mat-icon matListItemIcon>table_chart_view</mat-icon>
-                    <div matListItemTitle>Desagredado</div>
-                </mat-list-item>
-                <mat-list-item  routerLink="macro"  class="app-material-link">
-                  <mat-icon matListItemIcon>pie_chart</mat-icon>
-                  <div matListItemTitle>Macrodistrito</div>
-              </mat-list-item>
-              </mat-list>
-              
+    <mat-accordion>
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Dashboard</mat-panel-title>
+        </mat-expansion-panel-header>
 
-            </mat-expansion-panel>
-            
-          </mat-accordion>
-          
+        <mat-list>
+          <mat-list-item routerLink="dashboard" class="app-material-link">
+            <mat-icon matListItemIcon>bar_chart</mat-icon>
+            <div matListItemTitle>General</div>
+          </mat-list-item>
+          <mat-list-item routerLink="macro" class="app-material-link">
+            <mat-icon matListItemIcon>pie_chart</mat-icon>
+            <div matListItemTitle>Macrodistrito</div>
+          </mat-list-item>
+          <mat-list-item routerLink="mapa" class="app-material-link">
+            <mat-icon matListItemIcon>map</mat-icon>
+            <div matListItemTitle>Mapa</div>
+          </mat-list-item>
+        </mat-list>
 
-    </mat-drawer>
-    <mat-drawer-content style="padding: 5px;">
 
-        <router-outlet></router-outlet>
+      </mat-expansion-panel>
 
-    </mat-drawer-content>
+    </mat-accordion>
+
+
+  </mat-drawer>
+  <mat-drawer-content style="padding: 5px;">
+
+    <router-outlet></router-outlet>
+
+  </mat-drawer-content>
 </mat-drawer-container>

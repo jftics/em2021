@@ -35,7 +35,12 @@
           <mat-card-title>Total votos por partido</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div id="chartdivPieMacro"></div>
+          <div style="overflow:auto ;">
+            <div style="min-width: 500px;">
+              <div id="chartdivPieMacro"></div>
+            </div>
+          </div>
+          
         </mat-card-content>
       </mat-card>
       <br>
@@ -46,11 +51,38 @@
           <mat-card-title>Total votos por distritos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div id="chartdivBarDistrito"></div>
+          <div style="overflow:auto ;">
+            <div style="min-width: 500px;">
+              <div id="chartdivBarDistrito"></div>
+            </div>
+          </div>
+          
         </mat-card-content>
       </mat-card>
       <br>
     </div>
   
   </div>
+
+  <div class="row" style="margin: 0;">
+    <div class="col-sm-12 col-md-12">
+      <mat-card class="app-card-grafico" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>Total votos por zona</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div style="overflow:auto ;">
+            <div style="min-width: 700px;">
+              <div id="chartdivBarZonasMacro"></div>
+            </div>
+          </div>
+          
+        </mat-card-content>
+      </mat-card>
+      <br>
+    </div>
+    
+  
+  </div>
+  
   

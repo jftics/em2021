@@ -44,7 +44,12 @@
         <mat-card-title>Total votos por partido</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div id="chartdivTotales"></div>
+        <div style="overflow:auto ;">
+          <div style="min-width: 500px;">
+            <div id="chartdivTotales"></div>
+          </div>
+        </div>
+        
       </mat-card-content>
     </mat-card>
     <br>
@@ -55,7 +60,12 @@
         <mat-card-title>Total votos por macrodistrito</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div id="chartdivTotalesMacro"></div>
+        <div style="overflow:auto ;">
+          <div style="min-width: 500px;">
+            <div id="chartdivTotalesMacro"></div>
+          </div>
+        </div>
+        
       </mat-card-content>
     </mat-card>
     <br>
@@ -63,3 +73,23 @@
 
 </div>
 
+<br>
+
+<div class="row"  style="margin: 0;">
+  <div class="col-sm-12 col-md-12">
+    <mat-card class="example-card" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Totales por Macrodistrito</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="overflow:auto ;">
+          <div style="min-width: 700px;">
+            <div id="chartdivTotalMacro"></div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+
+  </div>
+</div>

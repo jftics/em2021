@@ -37,7 +37,9 @@
             "styles": [
               "@angular/material/prebuilt-themes/cyan-orange.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/ol/ol.css",
+              "node_modules/ol-ext/dist/ol-ext.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

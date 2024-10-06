@@ -28,7 +28,7 @@ export class DashboardComponent {
   dataTotalPBCSP: number = 0;
   dataTotalesPartido = {};
   dataTotalesMacro = {};
-
+  dataXMacro={}
 
   ngOnInit(): void {
     this.dataOrigen = this.getData()
@@ -39,7 +39,9 @@ export class DashboardComponent {
     this.dataTotalPBCSP = this.getDataTotalPartido(this.dataTotalesPartido, 'PBCSP')
 
     this.dataTotalesMacro = this.getDataTotalesMacroPrimeros(this.dataGeneral)
-    console.log(this.dataTotalesMacro)
+
+    this.dataXMacro = this.getDataXMacro(this.dataGeneral)
+    //console.log(this.dataTotalesMacro)
     // setTimeout(() => {
     //   this.Grafico1()
     // }, 1000)
@@ -48,6 +50,7 @@ export class DashboardComponent {
   ngAfterViewInit() {
     this.graficoTotales(this.dataTotalesPartido)
     this.graficoTotalesMacro(this.dataTotalesMacro);
+    this.graficoXMacro(this.dataXMacro)
   }
 
 
@@ -3388,7 +3391,6 @@ export class DashboardComponent {
 
     return res
   }
-
   graficoTotales(data: any) {
     /* Chart code */
     // Create root element
@@ -3403,7 +3405,7 @@ export class DashboardComponent {
       am5themes_Dark.new(root)
     ]);
 
-
+    
     // Create chart
     // https://www.amcharts.com/docs/v5/charts/xy-chart/
     let chart = root.container.children.push(am5xy.XYChart.new(root, {
@@ -3413,6 +3415,19 @@ export class DashboardComponent {
       wheelY: "none",
       paddingLeft: 0
     }));
+    chart.get("colors")!.set("colors", [
+      am5.color(0xA23111),//panbol
+      am5.color(0xC77601),//v
+      am5.color(0x8A6E47), //mts
+      am5.color(0x116517),//asp
+      am5.color(0x0283AE), //ucs
+      am5.color(0x334398), //unidos
+      am5.color(0x049BE3),  //mps
+      am5.color(0xEEC000),  //solbo
+      am5.color(0x721A06),    //jallalla
+      am5.color(0x01407D),  //mas
+      am5.color(0x288C8A)  //pbcsp
+    ]);
 
     // We don't want zoom-out button to appear while animating, so we hide it
     chart.zoomOutButton.set("forceHidden", true);
@@ -3496,6 +3511,7 @@ export class DashboardComponent {
       return chart.get("colors")!.getIndex(series.columns.indexOf(target));
     });
 
+    
 
     // Set data
     //let data = this.GraficoTotalesData(this.dataParse)
@@ -3667,6 +3683,11 @@ export class DashboardComponent {
       layout: root.verticalLayout
     }));
 
+    chart.get("colors")!.set("colors", [
+      am5.color(0x288C8A),  //pbcsp
+      am5.color(0x01407D)  //mas
+      
+    ]);
 
     // Add legend
     // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
@@ -3807,5 +3828,521 @@ export class DashboardComponent {
 
   }
 
+
+
+  getDataXMacro(dataOrigen: any) {
+
+    let p_asp = 0;
+    let p_mts = 0;
+    let p_mas_ipsp = 0;
+    let p_mps = 0;
+    let p_v = 0;
+    let p_ucs = 0;
+    let p_jallalla = 0;
+    let p_unidos = 0;
+    let p_pbcsp = 0;
+    let p_panbol = 0;
+    let p_solbo = 0;
+
+
+    let res:any = []
+
+    // {
+    //   region: "Central",
+    //   state: "North Dakota",
+    //   sales: 920
+    // }
+
+    let macroActual = ''
+
+    let sufijoN = 1
+
+    dataOrigen.forEach((macro: any) => {
+      //console.log(macro);
+
+      macro.distritos.forEach((distrito: any) => {
+        //console.log(distrito);
+        distrito.zonas.forEach((zona: any) => {
+          //console.log(zona);
+          zona.recintos.forEach((recinto: any) => {
+            //console.log(recinto);
+            recinto.datos.forEach((dato: any) => {
+              switch (dato.partido) {
+                case "ASP":
+                  p_asp = p_asp + dato.votos
+                  break;
+                case "MTS":
+                  p_mts = p_mts + dato.votos
+                  break;
+                case "MAS-IPSP":
+                  p_mas_ipsp = p_mas_ipsp + dato.votos
+                  break;
+                case "MPS":
+                  p_mps = p_mps + dato.votos
+                  break;
+                case "V":
+                  p_v = p_v + dato.votos
+                  break;
+                case "UCS":
+                  p_ucs = p_ucs + dato.votos
+                  break;
+                case "J.A. LLALLA.L.P.":
+                  p_jallalla = p_jallalla + dato.votos
+                  break;
+                case "UNIDOS":
+                  p_unidos = p_unidos + dato.votos
+                  break;
+                case "PBCSP":
+                  p_pbcsp = p_pbcsp + dato.votos
+                  break;
+                case "PAN-BOL":
+                  p_panbol = p_panbol + dato.votos
+                  break;
+                case "SOL.BO":
+                  p_solbo = p_solbo + dato.votos
+                  break;
+              }
+            })
+          })
+        })
+      })
+      let sufijo = " (" + sufijoN + ")"
+      res.push({
+        region: macro.macro,
+        state: "ASP" + sufijo,
+        sales: p_asp
+      })
+      res.push({
+        region: macro.macro,
+        state: "MTS" + sufijo,
+        sales: p_mts
+      })
+      res.push({
+        region: macro.macro,
+        state: "MAS-IPSP" + sufijo,
+        sales: p_mas_ipsp
+      })
+      res.push({
+        region: macro.macro,
+        state: "MPS" + sufijo,
+        sales: p_mps
+      })
+      res.push({
+        region: macro.macro,
+        state: "V" + sufijo,
+        sales: p_v
+      })
+      res.push({
+        region: macro.macro,
+        state: "UCS" + sufijo,
+        sales: p_ucs
+      })
+      res.push({
+        region: macro.macro,
+        state: "J.A. LLALLA.L.P." + sufijo,
+        sales: p_jallalla
+      })
+      res.push({
+        region: macro.macro,
+        state: "UNIDOS" + sufijo,
+        sales: p_unidos
+      })
+      res.push({
+        region: macro.macro,
+        state: "PBCSP" + sufijo,
+        sales: p_pbcsp
+      })
+      res.push({
+        region: macro.macro,
+        state: "PAN-BOL" + sufijo,
+        sales: p_panbol
+      })
+      res.push({
+        region: macro.macro,
+        state: "SOL.BO" + sufijo,
+        sales: p_solbo
+      })
+
+      sufijoN = sufijoN + 1
+      p_asp = 0;
+      p_mts = 0;
+      p_mas_ipsp = 0;
+      p_mps = 0;
+      p_v = 0;
+      p_ucs = 0;
+      p_jallalla = 0;
+      p_unidos = 0;
+      p_pbcsp = 0;
+      p_panbol = 0;
+      p_solbo = 0;
+    })
+
+    return res
+  }
+  graficoXMacro(data: any) {
+    /* Chart code */
+    // Create root element
+    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+    let root = am5.Root.new("chartdivTotalMacro");
+    root.locale = am5locales_es_ES;
+    root._logo!.dispose();
+    // Set themes
+    // https://www.amcharts.com/docs/v5/concepts/themes/
+    root.setThemes([
+      am5themes_Animated.new(root),
+      am5themes_Dark.new(root)
+    ]);
+
+
+
+    // Create chart
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/
+    let chart = root.container.children.push(am5xy.XYChart.new(root, {
+      panX: false,
+      panY: false,
+      wheelX: "panY",
+      wheelY: "zoomY",
+      layout: root.horizontalLayout,
+      paddingLeft: 0
+    }));
+
+
+    // Add legend
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
+    let legendData: any = [];
+    let legend = chart.children.push(
+      am5.Legend.new(root, {
+        nameField: "name",
+        fillField: "color",
+        strokeField: "color",
+        //centerY: am5.p50,
+        marginLeft: 20,
+        y: 20,
+        layout: root.verticalLayout,
+        clickTarget: "none"
+      })
+    );
+
+    let data11 = [{
+      region: "Central",
+      state: "North Dakota",
+      sales: 920
+    }, {
+      region: "Central",
+      state: "South Dakota",
+      sales: 1317
+    }, {
+      region: "Central",
+      state: "Kansas",
+      sales: 2916
+    }, {
+      region: "Central",
+      state: "Iowa",
+      sales: 4577
+    }, {
+      region: "Central",
+      state: "Nebraska",
+      sales: 7464
+    }, {
+      region: "Central",
+      state: "Oklahoma",
+      sales: 19686
+    }, {
+      region: "Central",
+      state: "Missouri",
+      sales: 22207
+    }, {
+      region: "Central",
+      state: "Minnesota",
+      sales: 29865
+    }, {
+      region: "Central",
+      state: "Wisconsin",
+      sales: 32125
+    }, {
+      region: "Central",
+      state: "Indiana",
+      sales: 53549
+    }, {
+      region: "Central",
+      state: "Michigan",
+      sales: 76281
+    }, {
+      region: "Central",
+      state: "Illinois",
+      sales: 80162
+    }, {
+      region: "Central",
+      state: "Texas",
+      sales: 170187
+    }, {
+      region: "East",
+      state: "West Virginia",
+      sales: 1209
+    }, {
+      region: "East",
+      state: "Maine",
+      sales: 1270
+    }, {
+      region: "East",
+      state: "District of Columbia",
+      sales: 2866
+    }, {
+      region: "East",
+      state: "New Hampshire",
+      sales: 7294
+    }, {
+      region: "East",
+      state: "Vermont",
+      sales: 8929
+    }, {
+      region: "East",
+      state: "Connecticut",
+      sales: 13386
+    }, {
+      region: "East",
+      state: "Rhode Island",
+      sales: 22629
+    }, {
+      region: "East",
+      state: "Maryland",
+      sales: 23707
+    }, {
+      region: "East",
+      state: "Delaware",
+      sales: 27453
+    }, {
+      region: "East",
+      state: "Massachusetts",
+      sales: 28639
+    }, {
+      region: "East",
+      state: "New Jersey",
+      sales: 35763
+    }, {
+      region: "East",
+      state: "Ohio",
+      sales: 78253
+    }, {
+      region: "East",
+      state: "Pennsylvania",
+      sales: 116522
+    }, {
+      region: "East",
+      state: "New York",
+      sales: 310914
+    }, {
+      region: "South",
+      state: "South Carolina",
+      sales: 8483
+    }, {
+      region: "South",
+      state: "Louisiana",
+      sales: 9219
+    }, {
+      region: "South",
+      state: "Mississippi",
+      sales: 10772
+    }, {
+      region: "South",
+      state: "Arkansas",
+      sales: 11678
+    }, {
+      region: "South",
+      state: "Alabama",
+      sales: 19511
+    }, {
+      region: "South",
+      state: "Tennessee",
+      sales: 30662
+    }, {
+      region: "South",
+      state: "Kentucky",
+      sales: 36598
+    }, {
+      region: "South",
+      state: "Georgia",
+      sales: 49103
+    }, {
+      region: "South",
+      state: "North Carolina",
+      sales: 55604
+    }, {
+      region: "South",
+      state: "Virginia",
+      sales: 70641
+    }, {
+      region: "South",
+      state: "Florida",
+      sales: 89479
+    }, {
+      region: "West",
+      state: "Wyoming",
+      sales: 1603
+    }, {
+      region: "West",
+      state: "Idaho",
+      sales: 4380
+    }, {
+      region: "West",
+      state: "New Mexico",
+      sales: 4779
+    }, {
+      region: "West",
+      state: "Montana",
+      sales: 5589
+    }, {
+      region: "West",
+      state: "Utah",
+      sales: 11223
+    }, {
+      region: "West",
+      state: "Nevada",
+      sales: 16729
+    }, {
+      region: "West",
+      state: "Oregon",
+      sales: 17431
+    }, {
+      region: "West",
+      state: "Colorado",
+      sales: 32110
+    }, {
+      region: "West",
+      state: "Arizona",
+      sales: 35283
+    }, {
+      region: "West",
+      state: "Washington",
+      sales: 138656
+    }, {
+      region: "West",
+      state: "California",
+      sales: 457731
+    }];
+
+
+    // Create axes
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+    let yAxis = chart.yAxes.push(am5xy.CategoryAxis.new(root, {
+      categoryField: "state",
+      renderer: am5xy.AxisRendererY.new(root, {
+        minGridDistance: 10,
+        minorGridEnabled: true
+      }),
+      tooltip: am5.Tooltip.new(root, {})
+    }));
+
+    yAxis.get("renderer").labels.template.setAll({
+      fontSize: 12,
+      location: 0.5
+    })
+
+    yAxis.data.setAll(data);
+
+    let xAxis = chart.xAxes.push(am5xy.ValueAxis.new(root, {
+      renderer: am5xy.AxisRendererX.new(root, {}),
+      tooltip: am5.Tooltip.new(root, {})
+    }));
+
+
+    // Add series
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+    let series = chart.series.push(am5xy.ColumnSeries.new(root, {
+      xAxis: xAxis,
+      yAxis: yAxis,
+      valueXField: "sales",
+      categoryYField: "state",
+      tooltip: am5.Tooltip.new(root, {
+        pointerOrientation: "horizontal"
+      })
+    }));
+
+    series.columns.template.setAll({
+      tooltipText: "{categoryY}: [bold]{valueX}[/]",
+      width: am5.percent(90),
+      strokeOpacity: 0
+    });
+
+    series.columns.template.adapters.add("fill", function (fill, target: any) {
+      if (target.dataItem) {
+        switch (target.dataItem.dataContext.region) {
+          case "Central":
+            return chart.get("colors")!.getIndex(0);
+            break;
+          case "East":
+            return chart.get("colors")!.getIndex(1);
+            break;
+          case "South":
+            return chart.get("colors")!.getIndex(2);
+            break;
+          case "West":
+            return chart.get("colors")!.getIndex(3);
+            break;
+        }
+      }
+      return fill;
+    })
+
+    series.data.setAll(data);
+
+    function createRange(label: any, category: any, color: any) {
+      let rangeDataItem = yAxis.makeDataItem({
+        category: category
+      });
+
+      let range = yAxis.createAxisRange(rangeDataItem);
+
+      rangeDataItem.get("label")!.setAll({
+        fill: color,
+        text: label,
+        location: 1,
+        fontWeight: "bold",
+        dx: -130
+      });
+
+      rangeDataItem.get("grid")!.setAll({
+        stroke: color,
+        strokeOpacity: 1,
+        location: 1
+      });
+
+      rangeDataItem.get("tick")!.setAll({
+        stroke: color,
+        strokeOpacity: 1,
+        location: 1,
+        visible: true,
+        length: 130
+      });
+
+      legendData.push({ name: label, color: color });
+
+    }
+
+    createRange("Centro", "SOL.BO (1)", chart.get("colors")!.getIndex(0));
+    createRange("Cotahuma", "SOL.BO (2)", chart.get("colors")!.getIndex(1));
+    createRange("Hampaturi", "SOL.BO (3)", chart.get("colors")!.getIndex(2));
+    createRange("Mallasa", "SOL.BO (4)", chart.get("colors")!.getIndex(3));
+
+    createRange("Max Paredes", "SOL.BO (5)", chart.get("colors")!.getIndex(4));
+    createRange("Periferica", "SOL.BO (6)", chart.get("colors")!.getIndex(5));
+    createRange("San Antonio", "SOL.BO (7)", chart.get("colors")!.getIndex(6));
+    createRange("Sur", "SOL.BO (8)", chart.get("colors")!.getIndex(7));
+
+    legend.data.setAll(legendData);
+
+    // Add cursor
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+    let cursor = chart.set("cursor", am5xy.XYCursor.new(root, {
+      xAxis: xAxis,
+      yAxis: yAxis
+    }));
+
+
+    // Make stuff animate on load
+    // https://www.amcharts.com/docs/v5/concepts/animations/
+    series.appear();
+    chart.appear(1000, 100);
+  }
 
 }
