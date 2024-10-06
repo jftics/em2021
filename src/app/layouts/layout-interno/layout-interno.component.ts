@@ -10,11 +10,11 @@ import {MatListModule} from '@angular/material/list';
 import {RouterLink} from '@angular/router';
 
 import { HeaderComponent } from '../../shared/header/header.component';
-
+import { FooterComponent } from '../../shared/footer/footer.component';
 @Component({
   selector: 'app-layout-interno',
   standalone: true,
-  imports: [MatSidenavModule , RouterOutlet, MatIconModule ,MatButtonModule, MatToolbarModule, MatExpansionModule, MatListModule, RouterLink,  HeaderComponent],
+  imports: [MatSidenavModule , RouterOutlet, MatIconModule ,MatButtonModule, MatToolbarModule, MatExpansionModule, MatListModule, RouterLink,  HeaderComponent, FooterComponent],
   templateUrl: './layout-interno.component.html',
   styleUrl: './layout-interno.component.scss'
 })
