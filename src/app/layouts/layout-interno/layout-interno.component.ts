@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component,ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
+import { MatDrawer } from '@angular/material/sidenav';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -19,5 +20,11 @@ import { FooterComponent } from '../../shared/footer/footer.component';
   styleUrl: './layout-interno.component.scss'
 })
 export class LayoutInternoComponent {
+  @ViewChild(MatDrawer) menu!: MatDrawer;
 
+  ocultarMenu(){
+    if(window.screen.width<500){ //movil
+      this.menu.close()
+    }
+  }
 }

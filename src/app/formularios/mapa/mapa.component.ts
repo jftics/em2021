@@ -280,9 +280,30 @@ export class MapaComponent {
     var zona = feature.get("zona")
     var mas = feature.get("MAS_IPSP")
     var pbcsp = feature.get("PBCSP")
-
+    var mapa = feature.get("mapa")
     var style
-    if (pbcsp > mas) {
+    if(mapa == 'Sin Dato'){
+      style = new Style({
+        stroke: new Stroke({
+          color: '#dad10f',
+          width: 2
+        }),
+        fill: new Fill({
+          color: 'rgba(255,255,255,0.5)'
+        }),
+        text: new Text({
+          text: zona + "\n" + mapa,
+          stroke: new Stroke({
+            color: '#288c8a',
+            width: 2
+          }),
+          fill: new Fill({
+            color: '#fff'
+          }),
+        })
+      })
+    }
+    else if (pbcsp > mas) {
       style = new Style({
         stroke: new Stroke({
           color: '#288c8a',

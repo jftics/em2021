@@ -27,15 +27,15 @@
         </mat-expansion-panel-header>
 
         <mat-list>
-          <mat-list-item routerLink="dashboard" class="app-material-link">
+          <mat-list-item routerLink="dashboard" class="app-material-link" (click)="ocultarMenu()">
             <mat-icon matListItemIcon>bar_chart</mat-icon>
             <div matListItemTitle>General</div>
           </mat-list-item>
-          <mat-list-item routerLink="macro" class="app-material-link">
+          <mat-list-item routerLink="macro" class="app-material-link" (click)="ocultarMenu()">
             <mat-icon matListItemIcon>pie_chart</mat-icon>
             <div matListItemTitle>Macrodistrito</div>
           </mat-list-item>
-          <mat-list-item routerLink="mapa" class="app-material-link">
+          <mat-list-item routerLink="mapa" class="app-material-link" (click)="ocultarMenu()">
             <mat-icon matListItemIcon>map</mat-icon>
             <div matListItemTitle>Mapa</div>
           </mat-list-item>
