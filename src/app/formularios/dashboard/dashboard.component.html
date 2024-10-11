@@ -2,33 +2,47 @@
 
 
 <div class="row" style="margin: 0;">
-  <div class="col-sm-12 col-md-4">
+  <div class="col-sm-12 col-md-3">
     <mat-card class="app-card app-card-principal" appearance="outlined">
       <mat-card-header>
-        <mat-card-title>Total Votos</mat-card-title>
+        <mat-card-title>Total</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <p>{{dataTotal | number: '1.0-0'}}</p>
+        <p>{{dataTotal | number: '1.0-0'}} votos</p>
+        <p style="color: #086f1b;">{{porcTotal | number: '1.0-0'}} %</p>
       </mat-card-content>
     </mat-card>
   </div>
-  <div class="col-sm-12 col-md-4">
+  <div class="col-sm-12 col-md-3">
     <mat-card class="app-card" appearance="outlined">
       <mat-card-header>
-        <mat-card-title>Votos PBCSP</mat-card-title>
+        <mat-card-title>PBCSP</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <p>{{dataTotalPBCSP | number: '1.0-0'}}</p>
+        <p>{{dataTotalPBCSP | number: '1.0-0'}} votos</p>
+        <p style="color: #5cf378;">{{porcPBCSP }} %</p>
       </mat-card-content>
     </mat-card>
   </div>
-  <div class="col-sm-12 col-md-4">
+  <div class="col-sm-12 col-md-3">
     <mat-card class="app-card" appearance="outlined">
       <mat-card-header>
-        <mat-card-title>Votos MAS-IPSP</mat-card-title>
+        <mat-card-title>MAS-IPSP</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <p>{{dataTotalMAS | number: '1.0-0'}}</p>
+        <p>{{dataTotalMAS | number: '1.0-0'}} votos</p>
+        <p style="color: #5cf378;">{{porcMAS }} %</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-sm-12 col-md-3">
+    <mat-card class="app-card" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Otros</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{dataTotalOtros | number: '1.0-0'}} votos</p>
+        <p style="color: #5cf378;">{{porcOtros }} %</p>
       </mat-card-content>
     </mat-card>
   </div>

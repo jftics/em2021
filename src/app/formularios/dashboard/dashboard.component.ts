@@ -26,6 +26,13 @@ export class DashboardComponent {
   dataTotal: number = 0;
   dataTotalMAS: number = 0;
   dataTotalPBCSP: number = 0;
+  dataTotalOtros: number = 0;
+
+  porcTotal: number = 100;
+  porcMAS: number = 0;
+  porcPBCSP: number = 0;
+  porcOtros: number = 0;
+
   dataTotalesPartido = {};
   dataTotalesMacro = {};
   dataXMacro={}
@@ -45,6 +52,15 @@ export class DashboardComponent {
     // setTimeout(() => {
     //   this.Grafico1()
     // }, 1000)
+
+    //Math.round(num * 100) / 100
+
+    this.dataTotalOtros = this.dataTotal - this.dataTotalMAS - this.dataTotalPBCSP 
+    //console.log(this.dataTotal,this.dataTotalMAS,this.dataTotalPBCSP , this.dataTotalOtros);
+    this.porcPBCSP=Math.round( (this.dataTotalPBCSP * 100 / this.dataTotal) * 100) / 100
+    this.porcMAS =Math.round( (this.dataTotalMAS * 100 / this.dataTotal) * 100) / 100
+    this.porcOtros =Math.round( (this.dataTotalOtros * 100 / this.dataTotal) * 100) / 100
+    //console.log(this.porcTotal,this.porcPBCSP,this.porcMAS, this.porcOtros);
   }
 
   ngAfterViewInit() {
